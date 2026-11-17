@@ -1,0 +1,83 @@
+/* ============================================================
+   CAIP — jetons de design
+   Palette tirée du logo : la porte blanche, la lumière cyan,
+   le bleu électrique et la nuit profonde derrière.
+   ============================================================ */
+:root {
+  /* Marque */
+  --c-electric: #1a4bff;   /* actions, liens — 6:1 sur blanc */
+  --c-electric-2: #2d5bff;
+  --c-royal: #0a2fb8;      /* dégradés, survols */
+  --c-navy: #071c7a;       /* en-têtes, avatars */
+  --c-night: #05103f;      /* fond des bandeaux */
+  --c-cyan: #38c6ff;       /* la lumière : sur fond foncé uniquement */
+  --c-cyan-soft: #8adcff;
+
+  /* Texte et surfaces */
+  --c-ink: #0a1550;
+  --c-ink-2: #2a3566;
+  --c-muted: #4a5578;
+  --c-on-dark: #d6ddf5;
+  --c-on-dark-2: #aebbe6;
+  --c-line: #e1e6f2;
+  --c-line-2: #c9d2ec;
+  --c-tint: #e9eeff;
+  --c-tint-2: #e4e9fb;
+  --c-bg: #f3f6fe;
+  --c-surface: #ffffff;
+
+  /* États */
+  --c-success: #0e7a4f;
+  --c-success-bg: #e6f4ee;
+  --c-warn: #8a4a06;
+  --c-warn-strong: #b45309;
+  --c-warn-bg: #fef3e2;
+  --c-danger: #a11f15;
+  --c-danger-strong: #c2261a;
+  --c-danger-bg: #fdecea;
+
+  /* Dégradés signature */
+  --g-night: radial-gradient(120% 90% at 100% 0%, rgba(56, 198, 255, 0.32) 0%, rgba(56, 198, 255, 0) 50%),
+    linear-gradient(140deg, #0a2fb8 0%, #071c7a 50%, #05103f 100%);
+  --g-button: linear-gradient(135deg, #2d5bff 0%, #0a2fb8 100%);
+  --g-progress: linear-gradient(90deg, #1a4bff, #38c6ff);
+  --g-door: linear-gradient(180deg, #ffffff 0%, #e9eeff 100%);
+
+  /* Typographie */
+  --f-display: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+  --f-body: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.375rem;
+  --fs-2xl: clamp(1.6rem, 1.2rem + 1.4vw, 2rem);
+  --fs-hero: clamp(2rem, 1.2rem + 3.2vw, 3.4rem);
+
+  /* Espacements, rayons, ombres */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 72px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 18px;
+  --r-xl: 22px;
+  --r-pill: 999px;
+  --shadow-card: 0 1px 2px rgba(10, 21, 80, 0.04);
+  --shadow-lift: 0 14px 30px rgba(10, 21, 80, 0.1);
+  --shadow-glow: 0 6px 18px rgba(26, 75, 255, 0.32);
+  --shadow-glow-strong: 0 12px 26px rgba(26, 75, 255, 0.45);
+
+  /* Mise en page */
+  --container: 1200px;
+  --sidebar: 248px;
+  --tap: 44px; /* taille minimale d'une cible tactile */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+}

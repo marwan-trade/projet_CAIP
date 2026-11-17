@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>CAIP — Profil et données (tablette)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+@keyframes caipRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes caipFill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes caipGauge{from{stroke-dasharray:0 327}}
+@keyframes caipDraw{from{stroke-dashoffset:600}to{stroke-dashoffset:0}}
+@keyframes caipFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-10px) rotate(-1.5deg)}}
+@keyframes caipPulse{0%{box-shadow:0 0 0 0 rgba(56,198,255,.6)}70%{box-shadow:0 0 0 12px rgba(56,198,255,0)}100%{box-shadow:0 0 0 0 rgba(56,198,255,0)}}
+.caip-rise{animation:caipRise .6s cubic-bezier(.2,.7,.2,1) both}
+.caip-fill{transform-origin:left center;animation:caipFill 1.1s cubic-bezier(.2,.7,.2,1) .3s both}
+.caip-gauge{animation:caipGauge 1.4s cubic-bezier(.2,.7,.2,1) .25s both}
+.caip-swoosh{animation:caipFloat 8s ease-in-out infinite}
+.caip-swoosh path{stroke-dasharray:600;animation:caipDraw 1.8s cubic-bezier(.2,.7,.2,1) .2s both}
+.caip-btn{transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+.caip-btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(26,75,255,.45)!important;filter:brightness(1.07)}
+.caip-card{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.caip-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(10,21,80,.10);border-color:#B9C7FF!important}
+.caip-pulse{animation:caipPulse 2.2s ease-out infinite}
+@media (prefers-reduced-motion: reduce){.caip-rise,.caip-fill,.caip-gauge,.caip-swoosh,.caip-swoosh path,.caip-pulse{animation:none!important}.caip-btn,.caip-card{transition:none}}
+
+</style>
+</helmet>
+<div style="width: 834px; min-height: 1700px; box-sizing: border-box; background: #F3F6FE; font-family: Inter, system-ui, sans-serif; color: #0A1550">
+<dc-import name="Web-Profil" hint-size="834px,1700px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":834,"height":1700}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

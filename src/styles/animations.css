@@ -1,0 +1,75 @@
+/* Mouvements CAIP : peu nombreux, toujours liés à une idée.
+   - rise    : les blocs entrent en cascade, comme on franchit un seuil
+   - draw    : l'arc lumineux du logo se dessine
+   - fill    : la progression se remplit
+   - pulse   : l'étape en cours respire
+   Tout s'arrête si la personne a demandé moins d'animations. */
+
+@keyframes caip-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes caip-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes caip-gauge {
+  from { stroke-dasharray: 0 327; }
+}
+
+@keyframes caip-draw {
+  from { stroke-dashoffset: 600; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes caip-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(-1.5deg); }
+}
+
+@keyframes caip-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(56, 198, 255, 0.6); }
+  70% { box-shadow: 0 0 0 12px rgba(56, 198, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(56, 198, 255, 0); }
+}
+
+@keyframes caip-shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+
+@keyframes caip-door {
+  from { transform: perspective(900px) rotateY(0deg); }
+  to { transform: perspective(900px) rotateY(-24deg); }
+}
+
+@keyframes caip-beam {
+  from { opacity: 0; transform: scaleX(0.4); }
+  to { opacity: 1; transform: none; }
+}
+
+.rise {
+  animation: caip-rise 0.6s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+.skeleton {
+  border-radius: var(--r-sm);
+  background: linear-gradient(90deg, var(--c-tint-2) 25%, #f4f6ff 50%, var(--c-tint-2) 75%);
+  background-size: 200% 100%;
+  animation: caip-shimmer 1.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

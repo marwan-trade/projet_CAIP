@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CAIP — Ordinateur · Formation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+@keyframes caipRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes caipFill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes caipGauge{from{stroke-dasharray:0 327}}
+@keyframes caipDraw{from{stroke-dashoffset:600}to{stroke-dashoffset:0}}
+@keyframes caipFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-10px) rotate(-1.5deg)}}
+@keyframes caipPulse{0%{box-shadow:0 0 0 0 rgba(56,198,255,.6)}70%{box-shadow:0 0 0 12px rgba(56,198,255,0)}100%{box-shadow:0 0 0 0 rgba(56,198,255,0)}}
+.caip-rise{animation:caipRise .6s cubic-bezier(.2,.7,.2,1) both}
+.caip-fill{transform-origin:left center;animation:caipFill 1.1s cubic-bezier(.2,.7,.2,1) .3s both}
+.caip-gauge{animation:caipGauge 1.4s cubic-bezier(.2,.7,.2,1) .25s both}
+.caip-swoosh{animation:caipFloat 8s ease-in-out infinite}
+.caip-swoosh path{stroke-dasharray:600;animation:caipDraw 1.8s cubic-bezier(.2,.7,.2,1) .2s both}
+.caip-btn{transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+.caip-btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(26,75,255,.45)!important;filter:brightness(1.07)}
+.caip-card{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.caip-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(10,21,80,.10);border-color:#B9C7FF!important}
+.caip-pulse{animation:caipPulse 2.2s ease-out infinite}
+@media (prefers-reduced-motion: reduce){.caip-rise,.caip-fill,.caip-gauge,.caip-swoosh,.caip-swoosh path,.caip-pulse{animation:none!important}.caip-btn,.caip-card{transition:none}}
+
+</style>
+</head>
+<body>
+
+
+<div style="width: 100%; min-height: 1000px; box-sizing: border-box; background: #F3F6FE; font-family: Inter, system-ui, sans-serif; color: #0A1550; display: flex; flex-wrap: wrap; align-items: stretch; align-content: flex-start">
+
+  <aside style="flex: 1 1 232px; box-sizing: border-box; background: #FFFFFF; border-right: 1px solid #E1E6F2; border-bottom: 1px solid #E1E6F2; padding: 18px 16px; display: flex; flex-wrap: wrap; align-content: flex-start; align-items: center; gap: 14px 12px">
+    <div style="flex: 1 1 180px; display: flex; align-items: center; gap: 10px; padding: 0 6px">
+      <img src="logo.png" alt="Logo CAIP" style="width: 36px; height: 36px; border-radius: 10px">
+      <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 20px; color: #071C7A">CAIP</span>
+    </div>
+    <a href="Web-Profil.dc.html" style="flex: 0 1 auto; display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 8px; border-radius: 14px; background: #F3F6FE; text-decoration: none; color: #0A1550">
+      <span style="width: 36px; height: 36px; border-radius: 50%; background: #1A4BFF; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex: 0 0 36px">AH</span>
+      <span style="display: flex; flex-direction: column; min-width: 0"><strong style="font-size: 14px">Amina Hassan</strong><span style="font-size: 12px; color: #1A4BFF">Profil et données</span></span>
+    </a>
+    <nav aria-label="Navigation principale" style="flex: 1 1 100%; display: flex; flex-wrap: wrap; gap: 4px">
+      <a href="Web-Tableau-de-bord.dc.html" style="flex: 1 1 116px; box-sizing: border-box; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 12px; border-radius: 12px; text-decoration: none; font-size: 15px; white-space: nowrap; color: #2A3566; font-weight: 500"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg>Accueil</a><a href="Web-Modeles.dc.html" style="flex: 1 1 116px; box-sizing: border-box; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 12px; border-radius: 12px; text-decoration: none; font-size: 15px; white-space: nowrap; color: #2A3566; font-weight: 500"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path></svg>Modèles</a><a href="Web-Rapport.dc.html" style="flex: 1 1 116px; box-sizing: border-box; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 12px; border-radius: 12px; text-decoration: none; font-size: 15px; white-space: nowrap; color: #2A3566; font-weight: 500"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"></path><path d="M6 16v-5M11 16V8M16 16v-3M21 16V5"></path></svg>Analyses</a><a href="Web-Entretiens.dc.html" style="flex: 1 1 116px; box-sizing: border-box; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 12px; border-radius: 12px; text-decoration: none; font-size: 15px; white-space: nowrap; color: #2A3566; font-weight: 500"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>Entretiens</a><a href="Web-Formation.dc.html" aria-current="page" style="flex: 1 1 116px; box-sizing: border-box; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 12px; border-radius: 12px; text-decoration: none; font-size: 15px; white-space: nowrap; background: #E9EEFF; color: #1A4BFF; font-weight: 700"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8l10-5 10 5-10 5z"></path><path d="M6 10v5c3 3 9 3 12 0v-5"></path></svg>Formation</a><a href="Web-Accompagnement.dc.html" style="flex: 1 1 116px; box-sizing: border-box; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 12px; border-radius: 12px; text-decoration: none; font-size: 15px; white-space: nowrap; color: #2A3566; font-weight: 500"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"></circle><path d="M2 21a7 7 0 0 1 14 0"></path></svg>Conseiller</a>
+    </nav>
+  </aside>
+  <main style="flex: 999 1 640px; min-width: 0; box-sizing: border-box; padding: 32px">
+    <div style="max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px">
+
+      <div style="display: flex; flex-direction: column; gap: 4px"><h1 style="margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 30px; font-weight: 800">Formation</h1><span style="font-size: 15px; color: #4A5578">6 modules courts, chacun validé par un quiz. Attestation de suivi à la fin.</span></div>
+      <div style="display: flex; flex-wrap: wrap; gap: 22px; align-items: flex-start">
+        <section class="caip-rise" style="animation-delay: 0ms; flex: 1 1 280px; min-width: 0; padding: 14px; border-radius: 20px; background: #FFFFFF; border: 1px solid #E1E6F2; display: flex; flex-direction: column; gap: 4px">
+          <div style="padding: 8px 10px 12px; display: flex; flex-direction: column; gap: 10px">
+            <div style="display: flex; justify-content: space-between; font-size: 14px"><strong>Ma progression</strong><span style="color: #4A5578">2 / 6</span></div>
+            <div style="height: 8px; border-radius: 4px; background: #E1E6F2"><div style="width: 33%; height: 8px; border-radius: 4px; background: #0E7A4F"></div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; background: transparent"><span style="width: 32px; height: 32px; border-radius: 50%; background: #0E7A4F; display: flex; align-items: center; justify-content: center; flex: 0 0 32px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg></span><div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><strong style="font-size: 14px; line-height: 1.35">Construire son projet professionnel</strong><span style="font-size: 12px; color: #0E7A4F; font-weight: 600">Validé</span></div></div><div style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; background: transparent"><span style="width: 32px; height: 32px; border-radius: 50%; background: #0E7A4F; display: flex; align-items: center; justify-content: center; flex: 0 0 32px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg></span><div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><strong style="font-size: 14px; line-height: 1.35">Rédiger un CV efficace</strong><span style="font-size: 12px; color: #0E7A4F; font-weight: 600">Validé</span></div></div><div style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; background: #E9EEFF"><span style="width: 32px; height: 32px; border-radius: 50%; background: #1A4BFF; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; flex: 0 0 32px">3</span><div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><strong style="font-size: 14px; line-height: 1.35">Se présenter en entretien</strong><span style="font-size: 12px; color: #1A4BFF; font-weight: 600">En cours · question 2 / 5</span></div></div><div style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; background: transparent"><span style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid #C9D2EC; box-sizing: border-box; color: #4A5578; display: flex; align-items: center; justify-content: center; font-weight: 700; flex: 0 0 32px">4</span><div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><strong style="font-size: 14px; line-height: 1.35">Répondre aux questions difficiles</strong><span style="font-size: 12px; color: #4A5578">À venir</span></div></div><div style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; background: transparent"><span style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid #C9D2EC; box-sizing: border-box; color: #4A5578; display: flex; align-items: center; justify-content: center; font-weight: 700; flex: 0 0 32px">5</span><div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><strong style="font-size: 14px; line-height: 1.35">Négocier et conclure</strong><span style="font-size: 12px; color: #4A5578">À venir</span></div></div><div style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; background: transparent"><span style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid #C9D2EC; box-sizing: border-box; color: #4A5578; display: flex; align-items: center; justify-content: center; font-weight: 700; flex: 0 0 32px">6</span><div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><strong style="font-size: 14px; line-height: 1.35">Après l'entretien</strong><span style="font-size: 12px; color: #4A5578">À venir</span></div></div>
+          <div style="margin-top: 8px; padding: 14px; border-radius: 14px; background: #FEF3E2; display: flex; gap: 10px; font-size: 13px; line-height: 1.5; color: #6B3A05"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"></circle><path d="M8.5 14L7 22l5-3 5 3-1.5-8"></path></svg><span>Attestation de suivi disponible après le module 6.</span></div>
+        </section>
+
+        <section class="caip-rise" style="animation-delay: 70ms; flex: 2 1 440px; min-width: 0; padding: 28px; border-radius: 22px; background: #FFFFFF; border: 1px solid #E1E6F2; display: flex; flex-direction: column; gap: 18px">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px">
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.6px; color: #1A4BFF">MODULE 3 · QUIZ</span>
+            <span style="font-size: 13px; color: #4A5578; font-weight: 600">Question 2 / 5</span>
+          </div>
+          <div style="height: 8px; border-radius: 4px; background: #E1E6F2"><div class="caip-fill" style="width: 40%; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #1A4BFF, #38C6FF)"></div></div>
+          <h2 id="q" style="margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 700; line-height: 1.35">Combien de temps viser pour vous présenter au début d'un entretien ?</h2>
+          <div role="radiogroup" aria-labelledby="q" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px">
+            
+              <button role="radio" aria-checked="false" style="display: flex; align-items: center; gap: 12px; min-height: 58px; padding: 0 16px; border-radius: 14px; border: 2px solid #C9D2EC; background: #FFFFFF; text-align: left; font: 500 15px Inter, sans-serif; color: #0A1550; cursor: pointer">
+                <span style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid #C9D2EC; box-sizing: border-box; display: flex; align-items: center; justify-content: center; flex: 0 0 22px"><span style="width: 10px; height: 10px; border-radius: 50%; background: transparent"></span></span>30 secondes</button>
+            
+              <button role="radio" aria-checked="false" style="display: flex; align-items: center; gap: 12px; min-height: 58px; padding: 0 16px; border-radius: 14px; border: 2px solid #C9D2EC; background: #FFFFFF; text-align: left; font: 500 15px Inter, sans-serif; color: #0A1550; cursor: pointer">
+                <span style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid #C9D2EC; box-sizing: border-box; display: flex; align-items: center; justify-content: center; flex: 0 0 22px"><span style="width: 10px; height: 10px; border-radius: 50%; background: transparent"></span></span>2 à 3 minutes</button>
+            
+              <button role="radio" aria-checked="false" style="display: flex; align-items: center; gap: 12px; min-height: 58px; padding: 0 16px; border-radius: 14px; border: 2px solid #C9D2EC; background: #FFFFFF; text-align: left; font: 500 15px Inter, sans-serif; color: #0A1550; cursor: pointer">
+                <span style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid #C9D2EC; box-sizing: border-box; display: flex; align-items: center; justify-content: center; flex: 0 0 22px"><span style="width: 10px; height: 10px; border-radius: 50%; background: transparent"></span></span>10 minutes</button>
+            
+              <button role="radio" aria-checked="false" style="display: flex; align-items: center; gap: 12px; min-height: 58px; padding: 0 16px; border-radius: 14px; border: 2px solid #C9D2EC; background: #FFFFFF; text-align: left; font: 500 15px Inter, sans-serif; color: #0A1550; cursor: pointer">
+                <span style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid #C9D2EC; box-sizing: border-box; display: flex; align-items: center; justify-content: center; flex: 0 0 22px"><span style="width: 10px; height: 10px; border-radius: 50%; background: transparent"></span></span>Autant que nécessaire</button>
+            
+          </div>
+          
+          
+          <button style="align-self: flex-start; height: 52px; padding: 0 28px; border: 0; border-radius: 14px; background: #E1E6F2; color: #4A5578; font: 700 16px Inter, sans-serif; cursor: pointer">Valider</button>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>
