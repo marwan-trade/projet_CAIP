@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>CAIP — Tableau de bord (ordinateur)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+@keyframes caipRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes caipFill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes caipGauge{from{stroke-dasharray:0 327}}
+@keyframes caipDraw{from{stroke-dashoffset:600}to{stroke-dashoffset:0}}
+@keyframes caipFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-10px) rotate(-1.5deg)}}
+@keyframes caipPulse{0%{box-shadow:0 0 0 0 rgba(56,198,255,.6)}70%{box-shadow:0 0 0 12px rgba(56,198,255,0)}100%{box-shadow:0 0 0 0 rgba(56,198,255,0)}}
+.caip-rise{animation:caipRise .6s cubic-bezier(.2,.7,.2,1) both}
+.caip-fill{transform-origin:left center;animation:caipFill 1.1s cubic-bezier(.2,.7,.2,1) .3s both}
+.caip-gauge{animation:caipGauge 1.4s cubic-bezier(.2,.7,.2,1) .25s both}
+.caip-swoosh{animation:caipFloat 8s ease-in-out infinite}
+.caip-swoosh path{stroke-dasharray:600;animation:caipDraw 1.8s cubic-bezier(.2,.7,.2,1) .2s both}
+.caip-btn{transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+.caip-btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(26,75,255,.45)!important;filter:brightness(1.07)}
+.caip-card{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.caip-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(10,21,80,.10);border-color:#B9C7FF!important}
+.caip-pulse{animation:caipPulse 2.2s ease-out infinite}
+@media (prefers-reduced-motion: reduce){.caip-rise,.caip-fill,.caip-gauge,.caip-swoosh,.caip-swoosh path,.caip-pulse{animation:none!important}.caip-btn,.caip-card{transition:none}}
+
+</style>
+</helmet>
+<div style="width: 100%; min-height: 1000px; box-sizing: border-box; background: #F3F6FE; font-family: Inter, system-ui, sans-serif; color: #0A1550; display: flex; flex-wrap: wrap; align-items: stretch; align-content: flex-start">
+
+  <aside style="flex: 1 1 232px; box-sizing: border-box; background: #FFFFFF; border-right: 1px solid #E1E6F2; border-bottom: 1px solid #E1E6F2; padding: 18px 16px; display: flex; flex-wrap: wrap; align-content: flex-start; align-items: center; gap: 14px 12px">
+    <div style="flex: 1 1 180px; display: flex; align-items: center; gap: 10px; padding: 0 6px">
+      <img src="/_blob/16085a41ab4cb964a98497d82995c93f" alt="Logo CAIP" style="width: 36px; height: 36px; border-radius: 10px">
+      <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 20px; color: #071C7A">CAIP</span>
+    </div>
+    <a href="Web-Profil.dc.html" style="flex: 0 1 auto; display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 8px; border-radius: 14px; background: #F3F6FE; text-decoration: none; color: #0A1550">
+      <span style="width: 36px; height: 36px; border-radius: 50%; background: #1A4BFF; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex: 0 0 36px">AH</span>
+      <span style="display: flex; flex-direction: column; min-width: 0"><strong style="font-size: 14px">Amina Hassan</strong><span style="font-size: 12px; color: #1A4BFF">Profil et données</span></span>
+    </a>
+    <nav aria-label="Navigation principale" style="flex: 1 1 100%; display: flex; flex-wrap: wrap; gap: 4px">
+      <a href="Web-Tableau-de-bord.dc.html" aria-current="page" style="flex: 1 1 116px; box-sizing: border-box; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 12px; border-radius: 12px; text-decoration: none; font-size: 15px; white-space: nowrap; background: #E9EEFF; color: #1A4BFF; font-weight: 700"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Accueil</a><a href="Web-Modeles.dc.html" style="flex: 1 1 116px; box-sizing: border-box; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 12px; border-radius: 12px; text-decoration: none; font-size: 15px; white-space: nowrap; color: #2A3566; font-weight: 500"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>Modèles</a><a href="Web-Rapport.dc.html" style="flex: 1 1 116px; box-sizing: border-box; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 12px; border-radius: 12px; text-decoration: none; font-size: 15px; white-space: nowrap; color: #2A3566; font-weight: 500"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M6 16v-5M11 16V8M16 16v-3M21 16V5"/></svg>Analyses</a><a href="Web-Entretiens.dc.html" style="flex: 1 1 116px; box-sizing: border-box; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 12px; border-radius: 12px; text-decoration: none; font-size: 15px; white-space: nowrap; color: #2A3566; font-weight: 500"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Entretiens</a><a href="Web-Formation.dc.html" style="flex: 1 1 116px; box-sizing: border-box; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 12px; border-radius: 12px; text-decoration: none; font-size: 15px; white-space: nowrap; color: #2A3566; font-weight: 500"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8l10-5 10 5-10 5z"/><path d="M6 10v5c3 3 9 3 12 0v-5"/></svg>Formation</a><a href="Web-Accompagnement.dc.html" style="flex: 1 1 116px; box-sizing: border-box; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 12px; border-radius: 12px; text-decoration: none; font-size: 15px; white-space: nowrap; color: #2A3566; font-weight: 500"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/></svg>Conseiller</a>
+    </nav>
+  </aside>
+
+  <main style="flex: 999 1 640px; min-width: 0; box-sizing: border-box; padding: 32px">
+    <div style="max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px">
+
+      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <h1 style="margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 30px; font-weight: 800">Bonjour, Amina</h1>
+          <span style="font-size: 15px; color: #4A5578">Vous avez franchi 3 étapes sur 5. Continuez !</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px">
+          <button class="caip-card" aria-label="Notifications, 1 nouvelle" style="position: relative; width: 46px; height: 46px; border-radius: 12px; border: 1px solid #E1E6F2; background: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1550" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+            <span style="position: absolute; top: 10px; right: 11px; width: 8px; height: 8px; border-radius: 50%; background: #C2261A"></span>
+          </button>
+          <a class="caip-btn" href="Web-Depot.dc.html" style="display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 18px; border-radius: 12px; background: linear-gradient(135deg, #2D5BFF 0%, #0A2FB8 100%); color: #FFFFFF; box-shadow: 0 6px 18px rgba(26,75,255,0.32); font-weight: 700; font-size: 15px; text-decoration: none"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Nouvelle analyse</a>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 20px">
+        <section class="caip-rise" style="animation-delay: 0ms; flex: 2 1 420px; min-width: 0; padding: 26px; border-radius: 22px; background: radial-gradient(120% 90% at 100% 0%, rgba(56,198,255,0.32) 0%, rgba(56,198,255,0) 50%), linear-gradient(140deg, #0A2FB8 0%, #071C7A 50%, #05103F 100%); position: relative; overflow: hidden; isolation: isolate; color: #FFFFFF; display: flex; flex-direction: column; gap: 20px">
+          <div style="display: flex; justify-content: space-between; align-items: baseline">
+            <h2 style="margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 700">Mon parcours</h2>
+            <span style="font-size: 15px; color: #8ADCFF; font-weight: 600">60 %</span>
+          </div>
+          <div style="height: 10px; border-radius: 5px; background: rgba(255,255,255,0.14)"><div class="caip-fill" style="width: 60%; height: 10px; border-radius: 5px; background: linear-gradient(90deg, #1A4BFF, #38C6FF)"></div></div>
+          <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; text-align: center; font-size: 13px">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px"><span style="width: 34px; height: 34px; border-radius: 50%; background: #38C6FF; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#071C7A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span style="color: #D6DDF5">CV</span></div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px"><span style="width: 34px; height: 34px; border-radius: 50%; background: #38C6FF; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#071C7A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span style="color: #D6DDF5">Lettre</span></div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px"><span style="width: 34px; height: 34px; border-radius: 50%; background: #38C6FF; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#071C7A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span style="color: #D6DDF5">Analyse</span></div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px"><span style="width: 34px; height: 34px; border-radius: 50%; border: 2px solid #38C6FF; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #8ADCFF">4</span><span style="color: #FFFFFF; font-weight: 600">Entretien</span></div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px"><span style="width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #AEBBE6">5</span><span style="color: #AEBBE6">Formation</span></div>
+          </div>
+        </section>
+
+        <section class="caip-rise" style="animation-delay: 70ms; flex: 1 1 260px; min-width: 0; padding: 24px; border-radius: 22px; background: #FFFFFF; border: 1px solid #E1E6F2; display: flex; flex-direction: column; gap: 12px">
+          <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.6px; color: #B45309">PROCHAINE ACTION</span>
+          <strong style="font-size: 18px; line-height: 1.35">Corrigez les 3 recommandations prioritaires de votre CV</strong>
+          <span style="font-size: 14px; color: #4A5578">Dernière analyse il y a 2 jours</span>
+          <a class="caip-btn" href="Web-Rapport.dc.html" style="margin-top: auto; display: flex; align-items: center; justify-content: center; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #2D5BFF 0%, #0A2FB8 100%); color: #FFFFFF; box-shadow: 0 6px 18px rgba(26,75,255,0.32); font-weight: 700; font-size: 15px; text-decoration: none">Voir mon rapport</a>
+        </section>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px">
+        <section class="caip-rise" style="animation-delay: 140ms; padding: 22px; border-radius: 20px; background: #FFFFFF; border: 1px solid #E1E6F2; display: flex; flex-direction: column; gap: 14px">
+          <h2 style="margin: 0; font-size: 15px; font-weight: 700; color: #4A5578">Score de mon CV</h2>
+          <div style="display: flex; align-items: baseline; gap: 10px"><strong style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 40px">64</strong><span style="font-size: 15px; color: #4A5578">/ 100</span><span style="padding: 3px 10px; border-radius: 999px; background: #E6F4EE; color: #0E7A4F; font-size: 12px; font-weight: 700">+12</span></div>
+          <div role="img" aria-label="Version 1 : 52, version 2 : 64" style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; color: #4A5578">
+            <div style="display: flex; align-items: center; gap: 8px"><span style="width: 22px">v1</span><div style="flex: 1; height: 8px; border-radius: 4px; background: #E4E9FB"><div style="width: 52%; height: 8px; border-radius: 4px; background: #9AA8D6"></div></div></div>
+            <div style="display: flex; align-items: center; gap: 8px"><span style="width: 22px">v2</span><div style="flex: 1; height: 8px; border-radius: 4px; background: #E4E9FB"><div class="caip-fill" style="width: 64%; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #1A4BFF, #38C6FF)"></div></div></div>
+          </div>
+        </section>
+        <section class="caip-rise" style="animation-delay: 210ms; padding: 22px; border-radius: 20px; background: #FFFFFF; border: 1px solid #E1E6F2; display: flex; flex-direction: column; gap: 14px">
+          <h2 style="margin: 0; font-size: 15px; font-weight: 700; color: #4A5578">Formation</h2>
+          <div style="display: flex; align-items: baseline; gap: 10px"><strong style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 40px">2</strong><span style="font-size: 15px; color: #4A5578">modules sur 6</span></div>
+          <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px"><span style="height: 8px; border-radius: 4px; background: #0E7A4F"></span><span style="height: 8px; border-radius: 4px; background: #0E7A4F"></span><span style="height: 8px; border-radius: 4px; background: #1A4BFF"></span><span style="height: 8px; border-radius: 4px; background: #E1E6F2"></span><span style="height: 8px; border-radius: 4px; background: #E1E6F2"></span><span style="height: 8px; border-radius: 4px; background: #E1E6F2"></span></div>
+          <a href="Web-Formation.dc.html" style="font-size: 14px; font-weight: 600; color: #1A4BFF">Reprendre le module 3</a>
+        </section>
+        <section class="caip-rise" style="animation-delay: 280ms; padding: 22px; border-radius: 20px; background: #FFFFFF; border: 1px solid #E1E6F2; display: flex; flex-direction: column; gap: 14px">
+          <h2 style="margin: 0; font-size: 15px; font-weight: 700; color: #4A5578">Accompagnement</h2>
+          <div style="display: flex; align-items: center; gap: 12px">
+            <div style="width: 44px; height: 44px; border-radius: 50%; background: #071C7A; color: #8ADCFF; display: flex; align-items: center; justify-content: center; font-weight: 700; flex: 0 0 44px">MA</div>
+            <div style="display: flex; flex-direction: column"><strong style="font-size: 15px">M. Ali</strong><span style="font-size: 13px; color: #4A5578">Rendez-vous jeudi 10 h</span></div>
+          </div>
+          <span style="align-self: flex-start; padding: 4px 10px; border-radius: 999px; background: #E6F4EE; color: #0E7A4F; font-size: 12px; font-weight: 700">En cours</span>
+          <a href="Web-Accompagnement.dc.html" style="font-size: 14px; font-weight: 600; color: #1A4BFF">Ouvrir la conversation</a>
+        </section>
+      </div>
+
+      <section class="caip-rise" style="animation-delay: 350ms; padding: 22px 24px; border-radius: 20px; background: #FFFFFF; border: 1px solid #E1E6F2; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline">
+          <h2 style="margin: 0; font-size: 18px; font-weight: 700">Historique des analyses</h2>
+          <a href="Web-Rapport.dc.html" style="font-size: 14px; font-weight: 600; color: #1A4BFF">Comparer deux versions</a>
+        </div>
+        <div style="overflow-x: auto">
+          <table style="width: 100%; min-width: 520px; border-collapse: collapse; font-size: 14px">
+            <thead>
+              <tr style="text-align: left; color: #4A5578; font-size: 13px">
+                <th scope="col" style="padding: 10px 8px; border-bottom: 1px solid #E1E6F2; font-weight: 600">Date</th>
+                <th scope="col" style="padding: 10px 8px; border-bottom: 1px solid #E1E6F2; font-weight: 600">Document</th>
+                <th scope="col" style="padding: 10px 8px; border-bottom: 1px solid #E1E6F2; font-weight: 600">Poste visé</th>
+                <th scope="col" style="padding: 10px 8px; border-bottom: 1px solid #E1E6F2; font-weight: 600">Score</th>
+                <th scope="col" style="padding: 10px 8px; border-bottom: 1px solid #E1E6F2; font-weight: 600"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Action</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 14px 8px; border-bottom: 1px solid #EEF1F8">12 nov. 2026</td>
+                <td style="padding: 14px 8px; border-bottom: 1px solid #EEF1F8">CV + lettre (v2)</td>
+                <td style="padding: 14px 8px; border-bottom: 1px solid #EEF1F8">Assistante comptable</td>
+                <td style="padding: 14px 8px; border-bottom: 1px solid #EEF1F8; font-weight: 700">64</td>
+                <td style="padding: 14px 8px; border-bottom: 1px solid #EEF1F8; text-align: right"><a href="Web-Rapport.dc.html" style="color: #1A4BFF; font-weight: 600">Voir</a></td>
+              </tr>
+              <tr>
+                <td style="padding: 14px 8px">8 nov. 2026</td>
+                <td style="padding: 14px 8px">CV (v1)</td>
+                <td style="padding: 14px 8px">Assistante comptable</td>
+                <td style="padding: 14px 8px; font-weight: 700">52</td>
+                <td style="padding: 14px 8px; text-align: right"><a href="#" style="color: #1A4BFF; font-weight: 600">Voir</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
