@@ -1,10 +1,11 @@
+import { asset } from '../config.js';
 import { Link } from 'react-router-dom';
 
 // Logo + mot-symbole. `onDark` pour les fonds nuit.
 export function Logo({ to = '/', size = 36, onDark = false, label = true }) {
   return (
     <Link to={to} className={`logo${onDark ? ' logo--on-dark' : ''}`} aria-label="CAIP, accueil">
-      <img src="/logo.png" alt="" width={size} height={size} style={{ borderRadius: size * 0.28 }} />
+      <img src={asset("logo.png")} alt="" width={size} height={size} style={{ borderRadius: size * 0.28 }} />
       {label && <span className="logo__word">CAIP</span>}
     </Link>
   );
