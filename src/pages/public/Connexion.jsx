@@ -51,7 +51,7 @@ export default function Connexion() {
           ))}
         </ul>
         <div className="auth__partners">
-          <h2 className="auth__partners-title">Nos premiers centres de formation partenaires</h2>
+          <h2 className="auth__partners-title">Avec nos centres de formation partenaires</h2>
           <PartnerLogos compact onDark />
         </div>
         <p className="auth__privacy">
