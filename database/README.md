@@ -1,8 +1,12 @@
-# Base de données CAIP (PostgreSQL)
+# Base de données CAIP
 
 La base est construite **au fur et à mesure des pages** : chaque nouvelle page
 n'ajoute que les tables et colonnes dont elle a besoin, dans un nouveau fichier
 numéroté. Les fichiers existants ne sont jamais modifiés une fois appliqués.
+
+**Pour l'instant : SQLite** (un seul fichier, rien à installer). Le SQL reste simple
+pour passer à PostgreSQL ensuite. Une première version PostgreSQL des mêmes tables
+est gardée dans `postgresql/` pour ce passage.
 
 | Fichier | Pages | Contenu |
 |---|---|---|
@@ -11,13 +15,18 @@ numéroté. Les fichiers existants ne sont jamais modifiés une fois appliqués.
 
 ## Installer
 
+Avec l'outil `sqlite3` (version 3.35 ou plus récente) :
+
 ```bash
-createdb caip
-psql -d caip -v ON_ERROR_STOP=1 -f database/001_comptes.sql
-psql -d caip -v ON_ERROR_STOP=1 -f database/002_centres_partenaires.sql
+sqlite3 caip.db < database/001_comptes.sql
+sqlite3 caip.db < database/002_centres_partenaires.sql
 ```
 
 Les fichiers s'appliquent dans l'ordre des numéros.
+
+**Important avec SQLite :** les clés étrangères ne sont vérifiées que si la connexion
+le demande. L'application doit exécuter `PRAGMA foreign_keys = ON;` à chaque ouverture
+de la base, sinon la suppression d'un compte ne supprime pas ses liens de réinitialisation.
 
 ## Correspondance avec les pages
 
@@ -37,6 +46,22 @@ du jeton envoyé par e-mail, date d'expiration, date d'utilisation.
 `conseiller` ou `administrateur`. Ces comptes sont créés par l'administrateur.
 
 **Partenaires** → `centre_partenaire` : nom, logo, site, ordre d'affichage, visibilité.
+
+## Passer à PostgreSQL plus tard
+
+Ce qui change :
+
+| SQLite (maintenant) | PostgreSQL |
+|---|---|
+| `INTEGER PRIMARY KEY AUTOINCREMENT` | `BIGINT GENERATED ALWAYS AS IDENTITY` |
+| `role` en texte + `CHECK (role IN (…))` | type `ENUM` (ou garder le `CHECK`) |
+| `TIMESTAMP` | `TIMESTAMPTZ` (avec fuseau horaire) |
+| `PRAGMA foreign_keys = ON` | inutile, toujours actif |
+| déclencheur `AFTER UPDATE … UPDATE …` | fonction `plpgsql` + déclencheur `BEFORE UPDATE` |
+| vérification d'e-mail avec `LIKE` | expression régulière `~` |
+
+Les noms de tables et de colonnes restent identiques : le code de l'application
+n'a pas à changer.
 
 ## Prochaines migrations
 
