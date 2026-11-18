@@ -13,6 +13,27 @@ const PORTES = [
   { n: '05', titre: 'La formation', texte: 'Six modules courts avec quiz, et une attestation de suivi à la fin.', icon: 'cap' },
 ];
 
+const ETAPES_PARTENARIAT = [
+  { titre: 'Le centre rejoint CAIP', texte: 'Une convention de partenariat est signée et le profil du centre est vérifié.' },
+  { titre: 'Il publie ses formations', texte: 'Intitulé, durée, dates, présentiel ou à distance : ses formations apparaissent dans CAIP.' },
+  { titre: 'CAIP oriente les candidats', texte: 'À partir du rapport d’analyse, la plateforme propose les formations qui comblent leurs points faibles.' },
+  { titre: 'Un suivi partagé', texte: 'Inscription, présence et attestation remontent dans le parcours du candidat, avec son accord.' },
+];
+
+const AVANTAGES = [
+  {
+    pour: 'Pour les centres de formation',
+    icon: 'users',
+    points: ['Des candidats déjà orientés et motivés', 'Une visibilité auprès des demandeurs d’emploi', 'Un tableau de suivi de leurs inscrits'],
+  },
+  {
+    pour: 'Pour les candidats',
+    icon: 'door',
+    mise: true,
+    points: ['Une formation choisie d’après leur rapport', 'L’inscription en quelques clics', 'L’attestation ajoutée à leur parcours'],
+  },
+];
+
 const CONSEILS = ['Les 5 rubriques d’un CV efficace', 'Se présenter en 2 minutes en entretien', 'Les erreurs courantes dans une lettre'];
 
 function SiteHeader() {
@@ -25,6 +46,7 @@ function SiteHeader() {
           <a href="#portes">Le parcours</a>
           <a href="#modeles">Modèles</a>
           <a href="#confidentialite">Confidentialité</a>
+          <a href="#partenaires">Partenaires</a>
         </nav>
         <div className="site-header__actions">
           <button type="button" className="ghost-btn" onClick={toggle} aria-label={t('lang.switch')}>
@@ -147,6 +169,62 @@ export default function Accueil() {
               </Card>
             ))}
           </div>
+          </div>
+        </section>
+
+        <section id="partenaires" className="container section partners">
+          <div className="section__head rise">
+            <span className="eyebrow">Partenariats</span>
+            <h2 className="section__title">Un réseau de centres de formation autour de CAIP</h2>
+            <p className="muted section__lead">
+              CAIP oriente chaque candidat vers la formation qui comble ses lacunes. Les centres partenaires
+              l’accueillent et suivent sa progression jusqu’à l’emploi.
+            </p>
+          </div>
+
+          <div className="partners__flow">
+            <h3 className="partners__subtitle">Comment fonctionne le partenariat</h3>
+            <ol className="partner-steps">
+              {ETAPES_PARTENARIAT.map((e, i) => (
+                <li key={e.titre} className="partner-step rise" style={{ '--i': i }}>
+                  <span className="partner-step__door" aria-hidden="true">{i + 1}</span>
+                  <strong className="partner-step__title">{e.titre}</strong>
+                  <p className="muted">{e.texte}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div className="partners__benefits">
+            {AVANTAGES.map((a, i) => (
+              <Card key={a.pour} className={`benefit rise${a.mise ? ' benefit--accent' : ''}`} style={{ '--i': i }}>
+                <span className="benefit__icon"><Icon name={a.icon} size={24} /></span>
+                <h3 className="card__title">{a.pour}</h3>
+                <ul className="checklist">
+                  {a.points.map((p) => (
+                    <li key={p}><Icon name="check" size={18} stroke={2.5} />{p}</li>
+                  ))}
+                </ul>
+              </Card>
+            ))}
+          </div>
+
+          <div className="partners__network">
+            <div className="partners__logos" aria-label="Centres partenaires">
+              {[1, 2, 3, 4].map((n) => (
+                <div key={n} className="partner-slot">
+                  <Icon name="cap" size={22} />
+                  <span>[Logo du centre partenaire]</span>
+                </div>
+              ))}
+            </div>
+            <div className="partners__join">
+              <div className="stack" style={{ '--gap': '4px' }}>
+                <strong>Vous êtes un centre de formation ?</strong>
+                <span className="muted">Rejoignez le réseau et recevez des candidats déjà orientés vers vos formations.</span>
+              </div>
+              <Button href="#partenaires" iconRight="chevRight">Devenir partenaire</Button>
+            </div>
           </div>
         </section>
 
