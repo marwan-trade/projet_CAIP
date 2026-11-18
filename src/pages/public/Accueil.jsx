@@ -4,6 +4,7 @@ import { Doorway, Logo, Swoosh } from '../../components/Brand.jsx';
 import { Badge, Button, Card } from '../../components/ui.jsx';
 import Icon from '../../components/Icon.jsx';
 import Vignette from '../../components/Vignette.jsx';
+import PartnerLogos from '../../components/PartnerLogos.jsx';
 
 const PORTES = [
   { n: '01', titre: 'Votre CV', texte: 'Huit modèles prêts à remplir, en DOCX ou PDF, et un guide qui dit quoi écrire dans chaque rubrique.', icon: 'docLines' },
@@ -210,14 +211,7 @@ export default function Accueil() {
           </div>
 
           <div className="partners__network">
-            <div className="partners__logos" aria-label="Centres partenaires">
-              {[1, 2, 3, 4].map((n) => (
-                <div key={n} className="partner-slot">
-                  <Icon name="cap" size={22} />
-                  <span>[Logo du centre partenaire]</span>
-                </div>
-              ))}
-            </div>
+            <PartnerLogos />
             <div className="partners__join">
               <div className="stack" style={{ '--gap': '4px' }}>
                 <strong>Vous êtes un centre de formation ?</strong>

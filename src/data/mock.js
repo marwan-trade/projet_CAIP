@@ -208,3 +208,13 @@ export const indicateurs = {
     ['Modules de formation', 6],
   ],
 };
+
+// Premiers centres de formation partenaires.
+// Pour ajouter un vrai partenaire : mettre son nom, déposer son logo dans
+// public/partenaires/ et indiquer le chemin, par exemple 'partenaires/centre-x.png'.
+export const partenaires = [
+  { nom: '[Centre partenaire 1]', logo: null, site: null },
+  { nom: '[Centre partenaire 2]', logo: null, site: null },
+  { nom: '[Centre partenaire 3]', logo: null, site: null },
+  { nom: '[Centre partenaire 4]', logo: null, site: null },
+];

@@ -4,6 +4,7 @@ import { useLang } from '../../i18n.jsx';
 import { Logo, Swoosh } from '../../components/Brand.jsx';
 import { Button, Checkbox, Field, Segmented } from '../../components/ui.jsx';
 import Icon from '../../components/Icon.jsx';
+import PartnerLogos from '../../components/PartnerLogos.jsx';
 
 const ATOUTS = [
   'Modèles de CV et de lettres prêts à l’emploi',
@@ -101,6 +102,11 @@ export default function Connexion() {
             <span className="muted">Démo : <Link to="/conseiller">conseiller</Link> · <Link to="/admin">administrateur</Link></span>
           </div>
         </form>
+      </section>
+
+      <section className="auth__partners" aria-labelledby="auth-partners-title">
+        <h2 id="auth-partners-title" className="auth__partners-title">Nos premiers centres de formation partenaires</h2>
+        <PartnerLogos compact />
       </section>
     </div>
   );
