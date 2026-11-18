@@ -25,7 +25,15 @@ export async function request(path, options = {}) {
 
 export const api = {
   tableauDeBord: () =>
-    simuler({ candidat: mock.candidat, parcours: mock.parcours, analyses: mock.analyses, modules: mock.modules, accompagnement: mock.accompagnement }),
+    simuler({
+      candidat: mock.candidat,
+      parcours: mock.parcours,
+      analyses: mock.analyses,
+      modules: mock.modules,
+      accompagnement: mock.accompagnement,
+      // Recommandations « Haute » pas encore corrigées dans la dernière analyse.
+      recommandationsPrioritaires: mock.rapport.recommandations.filter((r) => r.priorite === 'Haute').length,
+    }),
   rapport: () => simuler(mock.rapport),
   analyses: () => simuler(mock.analyses),
   modeles: () => simuler({ modeles: mock.modeles, secteurs: mock.secteurs }),
