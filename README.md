@@ -94,11 +94,6 @@ et définir l'adresse de l'API dans un fichier `.env` :
 VITE_API_URL=http://localhost:3000
 ```
 
-## Base de données
-
-Le dossier `database/` contient le schéma PostgreSQL, construit au fur et à mesure des
-pages : chaque page n'ajoute que ce dont elle a besoin. Voir `database/README.md`.
-
 ## Prochaines étapes
 
 - Brancher l'authentification et l'API Express.
