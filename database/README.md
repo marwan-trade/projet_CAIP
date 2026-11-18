@@ -5,13 +5,17 @@ n'ajoute que les tables et colonnes dont elle a besoin, dans un nouveau fichier
 numéroté. Les fichiers existants ne sont jamais modifiés une fois appliqués.
 
 **Pour l'instant : SQLite** (un seul fichier, rien à installer). Le SQL reste simple
-pour passer à PostgreSQL ensuite. Une première version PostgreSQL des mêmes tables
-est gardée dans `postgresql/` pour ce passage.
+pour passer à PostgreSQL ensuite. Une première version PostgreSQL des migrations 001
+et 002 est gardée dans `postgresql/` pour ce passage.
 
 | Fichier | Pages | Contenu |
 |---|---|---|
 | `001_comptes.sql` | Connexion, création de compte, mot de passe oublié | `utilisateur`, `reinitialisation_mot_de_passe` |
 | `002_centres_partenaires.sql` | Accueil (Partenariats), Connexion (pastilles) | `centre_partenaire` |
+| `003_tableau_de_bord.sql` | Tableau de bord du candidat | `document`, `analyse`, `recommandation`, `module_formation`, `progression_module`, `demande_accompagnement` ; colonne `specialite` du conseiller |
+
+Le dossier `requetes/` contient les requêtes de lecture de chaque page
+(par exemple `requetes/tableau_de_bord.sql`), prêtes pour le serveur.
 
 ## Installer
 
@@ -20,6 +24,7 @@ Avec l'outil `sqlite3` (version 3.35 ou plus récente) :
 ```bash
 sqlite3 caip.db < database/001_comptes.sql
 sqlite3 caip.db < database/002_centres_partenaires.sql
+sqlite3 caip.db < database/003_tableau_de_bord.sql
 ```
 
 Les fichiers s'appliquent dans l'ordre des numéros.
@@ -46,6 +51,26 @@ du jeton envoyé par e-mail, date d'expiration, date d'utilisation.
 `conseiller` ou `administrateur`. Ces comptes sont créés par l'administrateur.
 
 **Partenaires** → `centre_partenaire` : nom, logo, site, ordre d'affichage, visibilité.
+
+**Tableau de bord** → seulement ce que la page affiche :
+
+| Bloc de la page | Tables lues |
+|---|---|
+| Parcours en 5 portes | `document` (CV, lettre), `analyse`, `progression_module` |
+| Prochaine action | `recommandation` de priorité `haute` non corrigées, dernière analyse |
+| Score de mon CV, historique | `analyse` (score, poste visé, CV seul ou CV + lettre) |
+| Formation | `module_formation` (6 modules créés par la migration), `progression_module` |
+| Accompagnement | `demande_accompagnement`, conseiller dans `utilisateur` |
+
+Règles à connaître :
+- un module sans ligne dans `progression_module` est « à venir » ;
+- la porte « Entretien » est provisoirement franchie quand le module 3
+  « Se présenter en entretien » est validé (à revoir avec la page Entretiens) ;
+- une demande assignée, en cours ou clôturée a forcément un conseiller, qui doit
+  avoir le rôle `conseiller` ; un conseiller qui a des demandes ne peut pas être
+  supprimé (les réassigner d'abord, ou désactiver son compte) ;
+- supprimer un compte candidat supprime toutes ses données (documents, analyses,
+  progression, demandes).
 
 ## Passer à PostgreSQL plus tard
 
