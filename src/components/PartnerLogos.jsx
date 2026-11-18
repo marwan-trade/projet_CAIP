@@ -3,10 +3,12 @@ import { asset } from '../config.js';
 import Icon from './Icon.jsx';
 
 // Logos des centres de formation partenaires.
-// `compact` : bande discrète (page de connexion) ; sinon grands emplacements (accueil).
-export default function PartnerLogos({ compact = false, label = 'Centres de formation partenaires' }) {
+// `compact` : emplacements réduits (page de connexion) ; sinon grands emplacements (accueil).
+// `onDark` : sur fond bleu nuit, logos passés en blanc.
+export default function PartnerLogos({ compact = false, onDark = false, label = 'Centres de formation partenaires' }) {
+  const cls = ['partner-logos', compact && 'partner-logos--compact', onDark && 'partner-logos--on-dark'].filter(Boolean).join(' ');
   return (
-    <ul className={`partner-logos${compact ? ' partner-logos--compact' : ''}`} aria-label={label}>
+    <ul className={cls} aria-label={label}>
       {partenaires.map((p) => {
         const contenu = p.logo ? (
           <img src={asset(p.logo)} alt={p.nom} loading="lazy" />

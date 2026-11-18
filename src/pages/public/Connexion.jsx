@@ -50,6 +50,10 @@ export default function Connexion() {
             </li>
           ))}
         </ul>
+        <div className="auth__partners">
+          <h2 className="auth__partners-title">Nos premiers centres de formation partenaires</h2>
+          <PartnerLogos compact onDark />
+        </div>
         <p className="auth__privacy">
           <Icon name="lock" size={18} />
           Vos documents restent privés et ne servent jamais à entraîner une IA.
@@ -102,11 +106,6 @@ export default function Connexion() {
             <span className="muted">Démo : <Link to="/conseiller">conseiller</Link> · <Link to="/admin">administrateur</Link></span>
           </div>
         </form>
-      </section>
-
-      <section className="auth__partners" aria-labelledby="auth-partners-title">
-        <h2 id="auth-partners-title" className="auth__partners-title">Nos premiers centres de formation partenaires</h2>
-        <PartnerLogos compact />
       </section>
     </div>
   );

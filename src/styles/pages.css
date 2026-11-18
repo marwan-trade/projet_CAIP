@@ -377,6 +377,34 @@
   margin-inline: auto;
 }
 .partner-logos > li { min-width: 0; }
+.partner-logos--on-dark { margin-inline: 0; }
+.partner-logos--on-dark.partner-logos--compact .partner-slot {
+  flex-direction: column;
+  gap: 4px;
+  min-height: 72px;
+  padding: var(--sp-2) var(--sp-3);
+}
+.partner-logos--on-dark .partner-slot {
+  border-color: rgba(255, 255, 255, 0.28);
+  color: var(--c-on-dark);
+}
+.partner-logos--on-dark .partner-slot:hover {
+  border-color: var(--c-cyan);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+.partner-logos--on-dark .partner-slot--logo {
+  border-style: solid;
+  background: rgba(255, 255, 255, 0.06);
+}
+.partner-logos--on-dark .partner-slot img {
+  filter: grayscale(1) brightness(0) invert(1);
+  opacity: 0.85;
+}
+.partner-logos--on-dark .partner-slot:hover img {
+  filter: none;
+  opacity: 1;
+}
 .partner-logos--compact .partner-slot {
   flex-direction: row;
   min-height: 60px;
@@ -473,33 +501,8 @@
 .auth {
   min-height: 100vh;
   min-height: 100dvh;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: auto 1fr auto;
-}
-@media (min-width: 900px) {
-  .auth {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: 1fr auto;
-  }
-  .auth__partners { grid-column: 1 / -1; }
-}
-.auth__partners {
   display: flex;
-  flex-direction: column;
-  gap: var(--sp-4);
-  padding: var(--sp-6) clamp(var(--sp-4), 4vw, var(--sp-10));
-  background: #fff;
-  border-top: 1px solid var(--c-line);
-}
-.auth__partners-title {
-  font-family: var(--f-body);
-  font-size: var(--fs-xs);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-align: center;
-  color: var(--c-muted);
+  flex-wrap: wrap;
 }
 .auth__panel {
   position: relative;
@@ -529,8 +532,21 @@
 }
 .auth__list li { display: flex; gap: 12px; align-items: flex-start; }
 .auth__list svg { color: var(--c-cyan); flex: 0 0 auto; }
-.auth__privacy {
+.auth__partners {
   margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.auth__partners-title {
+  font-family: var(--f-body);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-on-dark-2);
+}
+.auth__privacy {
   display: flex;
   gap: 10px;
   align-items: flex-start;
@@ -576,7 +592,7 @@
 }
 @media (max-width: 899px) {
   .auth__panel { flex-basis: 100%; gap: var(--sp-4); }
-  .auth__list, .auth__privacy { display: none; }
+  .auth__list, .auth__privacy, .auth__partners { display: none; }
 }
 
 /* ============================== TABLEAU DE BORD ============================== */
