@@ -559,11 +559,27 @@
   box-shadow: 0 20px 50px rgba(10, 21, 80, 0.08);
 }
 .auth__form-title { font-size: var(--fs-xl); font-weight: 800; }
-.auth__forgot {
-  align-self: flex-end;
+.auth__forgot,
+.auth__link,
+.auth__back {
+  border: 0;
+  background: transparent;
+  padding: 6px 0;
   font-size: var(--fs-sm);
   font-weight: 600;
-  text-decoration: none;
+  color: var(--c-electric);
+  cursor: pointer;
+}
+.auth__forgot { align-self: flex-end; }
+.auth__link { align-self: center; }
+.auth__forgot:hover,
+.auth__link:hover,
+.auth__back:hover { color: var(--c-royal); text-decoration: underline; }
+.auth__back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 .auth__foot {
   display: flex;
