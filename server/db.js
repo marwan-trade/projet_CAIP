@@ -132,6 +132,17 @@ async function sqliteDb() {
   return db;
 }
 
+// Version 2 : 50 modèles de CV et 50 modèles de lettres par métier (server/contenus/).
+const MIGRATIONS = [
+  [2, async (db) => {
+    const { modelesMetiers } = await import('./contenus/modeles.js');
+    for (const m of modelesMetiers()) {
+      if (await db.get('SELECT id FROM modele WHERE nom = ?', [m.nom])) continue;
+      await db.run('INSERT INTO modele (type, nom, secteur, style, contenu, cree_le) VALUES (?, ?, ?, ?, ?, ?)', [m.type, m.nom, m.secteur, m.style, m.contenu, maintenant()]);
+    }
+  }],
+];
+
 export async function ouvrirBase() {
   const db = process.env.DB_CLIENT === 'sqlite' ? await sqliteDb() : await mysqlDb();
   // Première mise en route : crée les tables si la base est vide.
@@ -147,6 +158,14 @@ export async function ouvrirBase() {
     const { remplir } = await import('./seed.js');
     await remplir(db);
     console.log('[caip] Base créée et données de démonstration ajoutées.');
+    version = 1;
+  }
+  // Évolutions suivantes, appliquées une seule fois chacune.
+  for (const [v, appliquer] of MIGRATIONS) {
+    if (version >= v) continue;
+    await appliquer(db);
+    await db.run('INSERT INTO schema_version (version) VALUES (?)', [v]);
+    console.log(`[caip] Migration ${v} appliquée.`);
   }
   return db;
 }
