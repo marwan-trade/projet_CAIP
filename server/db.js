@@ -141,6 +141,12 @@ const MIGRATIONS = [
     await db.run("DELETE FROM modele WHERE nom LIKE 'Lettre % · %'");
     for (const nom of CV_RETIRES) await db.run('DELETE FROM modele WHERE nom = ?', [nom]);
   }],
+  // Version 4 : premier centre partenaire réel, affiché en tête de liste.
+  [4, async (db) => {
+    const nom = 'Centre Formation Arrey Technologie (CFAT)';
+    if (await db.get('SELECT id FROM centre_partenaire WHERE nom = ?', [nom])) return;
+    await db.run('INSERT INTO centre_partenaire (nom, logo_url, ordre, visible, cree_le) VALUES (?, ?, 0, 1, ?)', [nom, '/partenaires/cfat.png', maintenant()]);
+  }],
 ];
 
 export async function ouvrirBase() {
