@@ -132,14 +132,14 @@ async function sqliteDb() {
   return db;
 }
 
-// Version 2 : 50 modèles de CV et 50 modèles de lettres par métier (server/contenus/).
+// Version 2 (annulée) avait ajouté 50 CV et 50 lettres par métier.
+// Version 3 les retire de la base : lettres « Lettre … · … » et CV listés ci-dessous.
+const CV_RETIRES = ["CV Assistant(e) administratif(ve)", "CV Secrétaire de direction", "CV Agent d’accueil", "CV Assistant(e) ressources humaines", "CV Archiviste-documentaliste", "CV Agent administratif de la fonction publique", "CV Assistant(e) comptable", "CV Comptable", "CV Caissier(ère) de banque", "CV Chargé(e) de clientèle bancaire", "CV Contrôleur(se) de gestion junior", "CV Agent de recouvrement", "CV Vendeur(se) en magasin", "CV Commercial(e) terrain", "CV Responsable de boutique", "CV Caissier(ère)", "CV Conseiller(ère) client", "CV Chargé(e) de marketing digital", "CV Agent logistique", "CV Magasinier(ère)", "CV Déclarant(e) en douane", "CV Agent de transit", "CV Conducteur(trice) d’engins portuaires", "CV Chauffeur poids lourd", "CV Agent d’exploitation portuaire", "CV Électricien(ne) du bâtiment", "CV Technicien(ne) de maintenance industrielle", "CV Maçon(ne)", "CV Plombier(ère)", "CV Technicien(ne) froid et climatisation", "CV Soudeur(se)", "CV Conducteur(trice) de travaux junior", "CV Technicien(ne) support informatique", "CV Développeur(se) web", "CV Administrateur(trice) réseaux", "CV Technicien(ne) télécoms", "CV Analyste de données junior", "CV Infirmier(ère)", "CV Aide-soignant(e)", "CV Sage-femme", "CV Préparateur(trice) en pharmacie", "CV Agent de santé communautaire", "CV Réceptionniste d’hôtel", "CV Serveur(se)", "CV Cuisinier(ère)", "CV Guide touristique", "CV Valet ou femme de chambre", "CV Enseignant(e) du primaire", "CV Formateur(trice) pour adultes", "CV Animateur(trice) jeunesse"];
+
 const MIGRATIONS = [
-  [2, async (db) => {
-    const { modelesMetiers } = await import('./contenus/modeles.js');
-    for (const m of modelesMetiers()) {
-      if (await db.get('SELECT id FROM modele WHERE nom = ?', [m.nom])) continue;
-      await db.run('INSERT INTO modele (type, nom, secteur, style, contenu, cree_le) VALUES (?, ?, ?, ?, ?, ?)', [m.type, m.nom, m.secteur, m.style, m.contenu, maintenant()]);
-    }
+  [3, async (db) => {
+    await db.run("DELETE FROM modele WHERE nom LIKE 'Lettre % · %'");
+    for (const nom of CV_RETIRES) await db.run('DELETE FROM modele WHERE nom = ?', [nom]);
   }],
 ];
 
