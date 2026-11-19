@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { api } from '../../services/api.js';
 import { useAsync } from '../../hooks/useAsync.js';
-import { Button, Card, PageHeader, PageSkeleton } from '../../components/ui.jsx';
+import { Button, Card, ErreurChargement, PageHeader, PageSkeleton } from '../../components/ui.jsx';
 import { Swoosh } from '../../components/Brand.jsx';
 import Icon from '../../components/Icon.jsx';
 
 export default function Entretiens() {
-  const { data: themes, loading } = useAsync(api.entretiens);
+  const { data: themes, loading, error, recharger } = useAsync(api.entretiens);
   const [themeId, setThemeId] = useState('frequentes');
   const [ouverte, setOuverte] = useState(0);
 
+  if (error && !themes) return <ErreurChargement error={error} onRetry={recharger} />;
   if (loading || !themes) return <PageSkeleton />;
-  const theme = themes.find((t) => t.id === themeId);
+  const theme = themes.find((t) => t.id === themeId) || themes[0];
+  if (!theme) return <Card className="empty"><strong>Aucun thème publié pour le moment.</strong></Card>;
 
   return (
     <>
@@ -24,7 +26,7 @@ export default function Entretiens() {
               key={t.id}
               type="button"
               className="themes__item"
-              aria-current={t.id === themeId ? 'true' : undefined}
+              aria-current={t.id === theme.id ? 'true' : undefined}
               onClick={() => { setThemeId(t.id); setOuverte(0); }}
             >
               <span>{t.label}</span>
@@ -45,9 +47,9 @@ export default function Entretiens() {
 
           {theme.questions.map((q, i) => {
             const open = ouverte === i;
-            const id = `q-${themeId}-${i}`;
+            const id = `q-${theme.id}-${i}`;
             return (
-              <div key={q.q} className={`accordion rise${open ? ' is-open' : ''}`} style={{ '--i': i + 2 }}>
+              <div key={q.id ?? q.q} className={`accordion rise${open ? ' is-open' : ''}`} style={{ '--i': i + 2 }}>
                 <button type="button" className="accordion__head" aria-expanded={open} aria-controls={id} onClick={() => setOuverte(open ? -1 : i)}>
                   <span>{q.q}</span>
                   <Icon name="plus" size={20} className="accordion__sign" />

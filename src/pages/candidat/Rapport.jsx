@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { api } from '../../services/api.js';
+import { dateCourte, jourMois } from '../../format.js';
 import { useAsync } from '../../hooks/useAsync.js';
 import { Badge, Button, Card, Chips, Notice, PageHeader, PageSkeleton, Segmented } from '../../components/ui.jsx';
 import { ScoreGauge, VersionBars } from '../../components/Progressions.jsx';
@@ -17,22 +19,53 @@ function Liste({ items, icon, tone }) {
 }
 
 export default function Rapport() {
-  const { data: r, loading } = useAsync(api.rapport);
+  const [params] = useSearchParams();
+  const id = params.get('id') || 'derniere';
+  const { data: r, loading, error, setData } = useAsync(() => api.rapport(id), [id]);
   const [filtre, setFiltre] = useState('Toutes');
-  const [corrige, setCorrige] = useState({});
   const [onglet, setOnglet] = useState('reco'); // utilisé sur mobile
+  const [erreur, setErreur] = useState('');
 
+  if (error && !r) return <Notice tone="danger" icon="alert">{error.message}</Notice>;
   if (loading || !r) return <PageSkeleton />;
+  if (r.vide) {
+    return (
+      <>
+        <PageHeader back={{ to: '/app', label: 'Tableau de bord' }} title="Rapport d’analyse" />
+        <Card className="empty">
+          <strong>Vous n’avez pas encore d’analyse.</strong>
+          <span className="muted">Déposez votre CV : votre rapport s’affichera ici en moins d’une minute.</span>
+          <Button to="/app/analyse/nouvelle" icon="upload">Analyser mon CV</Button>
+        </Card>
+      </>
+    );
+  }
 
-  const nbCorrige = Object.values(corrige).filter(Boolean).length;
+  const maj = async (reco, champs) => {
+    setErreur('');
+    setData((d) => ({ ...d, recommandations: d.recommandations.map((x) => (x.id === reco.id ? { ...x, ...champs } : x)) }));
+    try {
+      await api.majRecommandation(reco.id, champs);
+    } catch (e) {
+      setErreur(e.message);
+      setData((d) => ({ ...d, recommandations: d.recommandations.map((x) => (x.id === reco.id ? reco : x)) }));
+    }
+  };
+  const noter = async (note) => {
+    setData((d) => ({ ...d, note }));
+    await api.noterAnalyse(r.id, note).catch((e) => setErreur(e.message));
+  };
+
+  const nbCorrige = r.recommandations.filter((x) => x.corrigee).length;
   const recos = r.recommandations.filter((x) => filtre === 'Toutes' || x.priorite === filtre);
+  const ecart = r.scorePrecedent === null ? null : r.score - r.scorePrecedent;
 
   return (
     <>
       <PageHeader
         back={{ to: '/app', label: 'Tableau de bord' }}
         title="Rapport d’analyse"
-        subtitle={`${r.documents} · ${r.poste} · ${r.date}`}
+        subtitle={`${r.documents} · ${r.poste} · ${dateCourte(r.date)}`}
         actions={
           <>
             <Button to="/app/accompagnement" variant="secondary">Demander l’avis d’un conseiller</Button>
@@ -49,10 +82,10 @@ export default function Rapport() {
               <ScoreGauge score={r.score} />
               <div className="stack" style={{ '--gap': '8px' }}>
                 <strong className="score-card__verdict">{r.verdict}</strong>
-                <Badge tone="glow">+{r.score - r.scorePrecedent} depuis la v1</Badge>
+                {ecart !== null && <Badge tone="glow">{ecart >= 0 ? '+' : ''}{ecart} depuis la v{r.version - 1}</Badge>}
               </div>
             </div>
-            <VersionBars onDark items={[{ label: 'v1 · 8 nov.', value: r.scorePrecedent }, { label: 'v2 · 12 nov.', value: r.score }]} />
+            {r.versions.length > 1 && <VersionBars onDark items={r.versions.map((v) => ({ label: `${v.label} · ${jourMois(v.date)}`, value: v.score }))} />}
           </Card>
 
           <div className="report__mobile-tabs">
@@ -89,8 +122,9 @@ export default function Rapport() {
           </div>
 
           <ol className="recos">
+            {recos.length === 0 && <li className="muted">Aucune recommandation de cette priorité.</li>}
             {recos.map((x) => {
-              const fait = !!corrige[x.id];
+              const fait = x.corrigee;
               return (
                 <li key={x.id} className={`reco${fait ? ' is-done' : ''}`}>
                   <div className="reco__body">
@@ -100,12 +134,15 @@ export default function Rapport() {
                     </div>
                     <strong className="reco__title">{x.titre}</strong>
                     <p className="muted">{x.detail}</p>
+                    <button type="button" className="reco__report" onClick={() => maj(x, { signalee: !x.signalee })} aria-pressed={x.signalee}>
+                      {x.signalee ? 'Signalée comme inadaptée · annuler' : 'Cette recommandation ne me correspond pas'}
+                    </button>
                   </div>
                   <button
                     type="button"
                     className="reco__toggle"
                     aria-pressed={fait}
-                    onClick={() => setCorrige((c) => ({ ...c, [x.id]: !fait }))}
+                    onClick={() => maj(x, { corrigee: !fait })}
                   >
                     {fait && <Icon name="check" size={16} stroke={3} />}
                     {fait ? 'Corrigé' : 'Marquer comme corrigé'}
@@ -115,7 +152,21 @@ export default function Rapport() {
             })}
           </ol>
 
-          <Notice tone="info" icon="info" action={<a href="#" className="link-arrow">Signaler une recommandation</a>}>
+          {erreur && <Notice tone="danger" icon="alert">{erreur}</Notice>}
+
+          <div className="rating">
+            <span id="note-label">Ces recommandations vous ont-elles aidé ?</span>
+            <div className="rating__stars" role="radiogroup" aria-labelledby="note-label">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <button key={n} type="button" role="radio" aria-checked={r.note === n} aria-label={`${n} sur 5`} className={`rating__star${r.note >= n ? ' is-on' : ''}`} onClick={() => noter(n)}>
+                  ★
+                </button>
+              ))}
+            </div>
+            {r.note && <span className="muted">Merci pour votre avis.</span>}
+          </div>
+
+          <Notice tone="info" icon="info">
             Cette analyse est une aide pour améliorer votre candidature. Elle ne garantit ni un entretien ni un emploi.
           </Notice>
         </Card>

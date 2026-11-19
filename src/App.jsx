@@ -7,6 +7,7 @@ import PageLoader from './components/PageLoader.jsx';
 const Accueil = lazy(() => import('./pages/public/Accueil.jsx'));
 const Connexion = lazy(() => import('./pages/public/Connexion.jsx'));
 const NotFound = lazy(() => import('./pages/public/NotFound.jsx'));
+const Reinitialiser = lazy(() => import('./pages/public/Reinitialiser.jsx'));
 
 const TableauDeBord = lazy(() => import('./pages/candidat/TableauDeBord.jsx'));
 const Modeles = lazy(() => import('./pages/candidat/Modeles.jsx'));
@@ -18,12 +19,14 @@ const Accompagnement = lazy(() => import('./pages/candidat/Accompagnement.jsx'))
 const Profil = lazy(() => import('./pages/candidat/Profil.jsx'));
 
 const Demandes = lazy(() => import('./pages/conseiller/Demandes.jsx'));
-const Indicateurs = lazy(() => import('./pages/admin/Indicateurs.jsx'));
+const Messages = lazy(() => import('./pages/conseiller/Messages.jsx'));
+const Ressources = lazy(() => import('./pages/conseiller/Ressources.jsx'));
 
-// Sections prévues mais pas encore conçues (messagerie conseiller, gestion des contenus…).
-function Bientot({ retour }) {
-  return <NotFound titre="Cette porte s’ouvrira bientôt." texte="Cette section est prévue dans une prochaine version." retour={retour} />;
-}
+const Indicateurs = lazy(() => import('./pages/admin/Indicateurs.jsx'));
+const Contenus = lazy(() => import('./pages/admin/Contenus.jsx'));
+const Comptes = lazy(() => import('./pages/admin/Comptes.jsx'));
+const Assignations = lazy(() => import('./pages/admin/Assignations.jsx'));
+const Audit = lazy(() => import('./pages/admin/Audit.jsx'));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -41,6 +44,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Accueil />} />
           <Route path="/connexion" element={<Connexion />} />
+          <Route path="/reinitialiser" element={<Reinitialiser />} />
 
           <Route path="/app" element={<AppLayout role="candidat" />}>
             <Route index element={<TableauDeBord />} />
@@ -51,16 +55,23 @@ export default function App() {
             <Route path="formation" element={<Formation />} />
             <Route path="accompagnement" element={<Accompagnement />} />
             <Route path="profil" element={<Profil />} />
+            <Route path="*" element={<NotFound retour="/app" />} />
           </Route>
 
           <Route path="/conseiller" element={<AppLayout role="conseiller" />}>
             <Route index element={<Demandes />} />
-            <Route path="*" element={<Bientot retour="/conseiller" />} />
+            <Route path="messages" element={<Messages />} />
+            <Route path="ressources" element={<Ressources />} />
+            <Route path="*" element={<NotFound retour="/conseiller" />} />
           </Route>
 
           <Route path="/admin" element={<AppLayout role="admin" />}>
             <Route index element={<Indicateurs />} />
-            <Route path="*" element={<Bientot retour="/admin" />} />
+            <Route path="contenus" element={<Contenus />} />
+            <Route path="comptes" element={<Comptes />} />
+            <Route path="assignations" element={<Assignations />} />
+            <Route path="audit" element={<Audit />} />
+            <Route path="*" element={<NotFound retour="/admin" />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

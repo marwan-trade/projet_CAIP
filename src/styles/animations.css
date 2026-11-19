@@ -73,3 +73,8 @@
     scroll-behavior: auto !important;
   }
 }
+
+@keyframes caip-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

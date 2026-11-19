@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from './Icon.jsx';
 
@@ -175,5 +176,42 @@ export function Notice({ tone = 'info', icon = 'info', title, children, action }
       </div>
       {action}
     </div>
+  );
+}
+
+/* ---------- Fenêtre modale ---------- */
+export function Modal({ titre, onClose, children, actions, large }) {
+  useEffect(() => {
+    const echap = (e) => e.key === 'Escape' && onClose();
+    document.addEventListener('keydown', echap);
+    const avant = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', echap);
+      document.body.style.overflow = avant;
+    };
+  }, [onClose]);
+  return (
+    <div className="modal" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+      <div className={cx('modal__box', large && 'modal__box--large')} role="dialog" aria-modal="true" aria-labelledby="modal-titre">
+        <div className="modal__head">
+          <h2 id="modal-titre" className="card__title">{titre}</h2>
+          <button type="button" className="icon-btn" aria-label="Fermer" onClick={onClose} autoFocus>
+            <Icon name="close" size={20} />
+          </button>
+        </div>
+        <div className="modal__body">{children}</div>
+        {actions && <div className="modal__foot">{actions}</div>}
+      </div>
+    </div>
+  );
+}
+
+/* ---------- État vide ou erreur de chargement ---------- */
+export function ErreurChargement({ error, onRetry }) {
+  return (
+    <Notice tone="danger" icon="alert" title="Chargement impossible" action={onRetry && <Button variant="secondary" onClick={onRetry}>Réessayer</Button>}>
+      {error?.message}
+    </Notice>
   );
 }

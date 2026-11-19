@@ -2,6 +2,8 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card, Checkbox, Field, Notice, PageHeader } from '../../components/ui.jsx';
 import Icon from '../../components/Icon.jsx';
+import { api, fichierEnBase64 } from '../../services/api.js';
+import { useSession } from '../../session.jsx';
 
 const MAX = 5 * 1024 * 1024;
 const TYPES = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
@@ -62,7 +64,9 @@ export default function Depot() {
   const navigate = useNavigate();
   const [cv, setCv] = useState(null);
   const [lettre, setLettre] = useState(null);
-  const [poste, setPoste] = useState('Assistante comptable');
+  const { utilisateur } = useSession();
+  const [poste, setPoste] = useState(utilisateur?.posteVise || '');
+  const [erreur, setErreur] = useState('');
   const [consent, setConsent] = useState(true);
   const [partage, setPartage] = useState(false);
   const [envoi, setEnvoi] = useState(false);
@@ -71,12 +75,19 @@ export default function Depot() {
   const errLettre = verifier(lettre);
   const pret = cv && !errCv && !errLettre && consent && poste.trim();
 
-  const lancer = (e) => {
+  const lancer = async (e) => {
     e.preventDefault();
     if (!pret) return;
     setEnvoi(true);
-    // À remplacer par l'envoi réel (multipart) vers l'API.
-    setTimeout(() => navigate('/app/analyse/rapport'), 1800);
+    setErreur('');
+    try {
+      const [cvB64, lettreB64] = await Promise.all([fichierEnBase64(cv), lettre ? fichierEnBase64(lettre) : null]);
+      const { id } = await api.lancerAnalyse({ poste: poste.trim(), consentement: consent, partage, cv: cvB64, lettre: lettreB64 });
+      navigate(`/app/analyse/rapport?id=${id}`);
+    } catch (err) {
+      setErreur(err.message);
+      setEnvoi(false);
+    }
   };
 
   return (
@@ -102,13 +113,15 @@ export default function Depot() {
 
           <div className="stack" style={{ '--gap': '10px' }}>
             <h2 className="step-title"><span>3</span>Poste visé</h2>
-            <Field label="Intitulé du poste" value={poste} onChange={(e) => setPoste(e.target.value)} hint="Les recommandations seront adaptées à ce poste." />
+            <Field label="Intitulé du poste" value={poste} placeholder="Ex. Assistante comptable" onChange={(e) => setPoste(e.target.value)} hint="Les recommandations seront adaptées à ce poste." />
           </div>
 
           <div className="consent">
             <Checkbox checked={consent} onChange={(e) => setConsent(e.target.checked)} label="J’accepte que mes documents soient analysés. Ils restent privés et ne servent jamais à entraîner une IA." />
             <Checkbox checked={partage} onChange={(e) => setPartage(e.target.checked)} label="Partager ces documents avec mon conseiller" />
           </div>
+
+          {erreur && <Notice tone="danger" icon="alert" title="L’analyse n’a pas pu être lancée">{erreur}</Notice>}
 
           {envoi ? (
             <div className="analysing" role="status">
@@ -119,7 +132,7 @@ export default function Depot() {
           ) : (
             <div className="row">
               <Button type="submit" size="lg" disabled={!pret}>Lancer l’analyse</Button>
-              <span className="muted">{pret ? 'Résultat en moins de 60 secondes.' : 'Ajoutez au moins votre CV pour continuer.'}</span>
+              <span className="muted">{pret ? 'Résultat en moins de 60 secondes.' : !cv ? 'Ajoutez au moins votre CV pour continuer.' : !poste.trim() ? 'Indiquez le poste visé.' : 'Cochez votre accord pour l’analyse.'}</span>
             </div>
           )}
         </Card>

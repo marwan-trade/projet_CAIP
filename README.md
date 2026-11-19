@@ -1,36 +1,67 @@
-# CAIP — interface React + Vite
+# CAIP — plateforme d'accompagnement vers l'emploi
 
-Plateforme d'accompagnement vers l'emploi : modèles de CV et de lettres, analyse de candidature,
-préparation aux entretiens, formation et suivi par un conseiller.
+Modèles de CV et de lettres, analyse de candidature, préparation aux entretiens, formation
+et suivi par un conseiller. Trois espaces : **candidat**, **conseiller**, **administrateur**.
 
-Ce dépôt contient l'**interface** (front-end). Les données sont fictives et passent par
-`src/services/api.js`, prêt à être branché sur l'API Express du cahier des charges.
+Branche `v1` : application complète — interface React + Vite, serveur Node.js et base **MySQL**.
 
-## Démarrer
+## Démarrer en local
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173
-npm run build      # version optimisée dans dist/
-npm run preview    # tester la version optimisée
+npm run dev:api    # serveur sur http://localhost:3000 (base SQLite locale, sans MySQL)
+npm run dev        # interface sur http://localhost:5173 (les appels /api vont au serveur)
 ```
 
-Node.js 18 ou plus récent.
+Avec MySQL : définir `MYSQL_URL` (voir `.env.example`), puis `npm run build && npm start`.
+Au premier démarrage sur une base vide, le serveur crée les tables
+(`database/mysql/schema.sql`) et ajoute les données de démonstration.
+
+Node.js 20 ou plus récent (22 pour le mode SQLite local).
+
+## Comptes de démonstration
+
+Mot de passe commun : `Caip2026!` (variable `DEMO_PASSWORD`). **À changer avant une vraie mise en service.**
+
+| Rôle | E-mail |
+|---|---|
+| Candidate | `amina@exemple.com` |
+| Conseiller | `ali@caip.dj` (et `deka@caip.dj`) |
+| Administrateur | `admin@caip.dj` |
+
+## Mise en ligne (Railway)
+
+1. Nouveau projet → *Deploy from GitHub repo* → `projet_CAIP`, branche `v1`.
+2. Ajouter une base **MySQL** au projet.
+3. Dans le service de l'application, variable `MYSQL_URL` = `${{MySQL.MYSQL_URL}}`.
+4. *Settings → Networking → Generate Domain*. Build : `npm run build`, démarrage : `npm start` (détectés automatiquement).
+
+## Serveur
+
+```
+server/
+  index.js        serveur HTTP : API sous /api, interface (dist/) pour le reste
+  db.js           accès MySQL (mysql2) ou SQLite en local ; création du schéma au 1er démarrage
+  seed.js         données de démonstration
+  securite.js     mots de passe (scrypt), jetons de session, cookies
+  analyse.js      analyse du CV et de la lettre par règles explicables (score sur 100)
+  extraction.js   lecture du texte des PDF et DOCX
+  routes/         auth.js, candidat.js, equipe.js (conseiller + administrateur)
+```
+
+- Sessions : cookie `HttpOnly`, `SameSite=Lax`, `Secure` en production ; 5 essais de connexion puis blocage 15 min.
+- Mot de passe oublié : tant qu'aucun service d'e-mail n'est branché, le lien s'affiche à l'écran
+  (`LIEN_REINITIALISATION_A_L_ECRAN=non` pour le désactiver) et apparaît dans les journaux du serveur.
+- Documents : PDF ou DOCX, 5 Mo max, type vérifié sur le contenu ; le conseiller ne voit que les documents partagés.
 
 | Adresse | Écran |
 |---|---|
 | `/` | Accueil visiteur |
-| `/connexion` | Connexion et création de compte (`?mode=inscription`) |
-| `/app` | Tableau de bord du candidat |
-| `/app/modeles` | Bibliothèque de modèles |
-| `/app/analyse/nouvelle` | Dépôt d'une candidature à analyser |
-| `/app/analyse/rapport` | Rapport d'analyse |
-| `/app/entretiens` | Préparation à l'entretien |
-| `/app/formation` | Modules et quiz |
-| `/app/accompagnement` | Suivi de la demande et messagerie |
-| `/app/profil` | Profil, documents, droits (export, suppression) |
-| `/conseiller` | Espace conseiller |
-| `/admin` | Indicateurs et assignations |
+| `/connexion` | Connexion, création de compte (`?mode=inscription`), mot de passe oublié (`?mode=oubli`) |
+| `/reinitialiser?jeton=…` | Nouveau mot de passe |
+| `/app` … | Candidat : tableau de bord, modèles, analyse, rapport, entretiens, formation, accompagnement, profil |
+| `/conseiller` … | Conseiller : demandes, messages, ressources |
+| `/admin` … | Administrateur : indicateurs, contenus, comptes, assignations, journal d'audit |
 
 ## Organisation
 
@@ -49,8 +80,10 @@ src/
   components/         Icon, ui (Button, Card, Badge…), Brand (Logo, Swoosh, Doorway), Progressions
   layouts/AppLayout   coque de l'application selon le rôle
   pages/              public/, candidat/, conseiller/, admin/
-  services/api.js     accès aux données (fictives pour l'instant)
-  data/mock.js        données d'exemple
+  services/api.js     appels à l'API du serveur
+  session.jsx         utilisateur connecté et accès par rôle
+  format.js           dates et tailles
+  data/mock.js        exemples de partenaires (affichés pendant le chargement)
 ```
 
 ## Identité visuelle

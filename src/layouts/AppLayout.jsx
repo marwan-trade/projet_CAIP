@@ -1,9 +1,11 @@
 import { Suspense } from 'react';
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useLang } from '../i18n.jsx';
+import { ESPACE, useSession } from '../session.jsx';
+import PageLoader from '../components/PageLoader.jsx';
 import { Logo } from '../components/Brand.jsx';
 import Icon from '../components/Icon.jsx';
-import { Avatar, IconButton, PageSkeleton } from '../components/ui.jsx';
+import { Avatar, PageSkeleton } from '../components/ui.jsx';
 
 // Navigation par rôle. `mobile: false` = absent de la barre du bas (5 entrées max).
 const NAV = {
@@ -29,10 +31,12 @@ const NAV = {
   ],
 };
 
-const PEOPLE = {
-  candidat: { initials: 'AH', name: 'Amina Hassan', sub: 'nav.profile', to: '/app/profil', tone: 'electric' },
-  conseiller: { initials: 'MA', name: 'M. Ali', sub: 'Conseiller', to: '/conseiller', tone: 'navy' },
-  admin: { initials: 'AD', name: 'Administration', sub: 'Administrateur', to: '/admin', tone: 'ink' },
+// Rôle de la coque → rôle du compte.
+const ROLE = { candidat: 'candidat', conseiller: 'conseiller', admin: 'administrateur' };
+const CARTE = {
+  candidat: { sub: 'nav.profile', to: '/app/profil', tone: 'electric', alerte: '/app/accompagnement' },
+  conseiller: { sub: 'Conseiller', to: '/conseiller', tone: 'navy', alerte: '/conseiller/messages' },
+  admin: { sub: 'Administrateur', to: '/admin', tone: 'ink', alerte: '/admin/assignations' },
 };
 
 function NavItems({ role, variant }) {
@@ -57,8 +61,22 @@ function NavItems({ role, variant }) {
 
 export default function AppLayout({ role = 'candidat' }) {
   const { t, lang, toggle } = useLang();
-  const me = PEOPLE[role];
-  const sub = me.sub.startsWith('nav.') ? t(me.sub) : me.sub;
+  const { utilisateur, deconnecter } = useSession();
+  const { pathname, search } = useLocation();
+  const navigate = useNavigate();
+
+  // Accès réservé : sans session, retour à la connexion ; mauvais rôle, retour à son espace.
+  if (utilisateur === undefined) return <PageLoader />;
+  if (!utilisateur) return <Navigate to={`/connexion?suite=${encodeURIComponent(pathname + search)}`} replace />;
+  if (utilisateur.role !== ROLE[role]) return <Navigate to={ESPACE[utilisateur.role]} replace />;
+
+  const carte = CARTE[role];
+  const me = { ...carte, initials: utilisateur.initiales, name: utilisateur.nom };
+  const sub = me.sub.startsWith('nav.') ? t(me.sub) : utilisateur.specialite ? `${me.sub} · ${utilisateur.specialite}` : me.sub;
+  const sortir = async () => {
+    await deconnecter();
+    navigate('/connexion', { replace: true });
+  };
 
   return (
     <div className={`app app--${role}`}>
@@ -83,10 +101,10 @@ export default function AppLayout({ role = 'candidat' }) {
               <Icon name="globe" size={18} />
               {lang === 'fr' ? 'FR' : 'EN'}
             </button>
-            <Link to="/" className="ghost-btn">
+            <button type="button" className="ghost-btn" onClick={sortir}>
               <Icon name="logout" size={18} />
               {t('nav.logout')}
-            </Link>
+            </button>
           </div>
         </div>
       </aside>
@@ -99,7 +117,12 @@ export default function AppLayout({ role = 'candidat' }) {
             <button type="button" className="ghost-btn" onClick={toggle} aria-label={t('lang.switch')}>
               {lang === 'fr' ? 'FR' : 'EN'}
             </button>
-            <IconButton icon="bell" label={t('notifications')} badge />
+            <Link to={me.alerte} className="icon-btn" aria-label={t('notifications')}>
+              <Icon name="bell" size={20} />
+            </Link>
+            <button type="button" className="icon-btn" onClick={sortir} aria-label={t('nav.logout')}>
+              <Icon name="logout" size={20} />
+            </button>
             <Link to={me.to} aria-label={sub}>
               <Avatar initials={me.initials} tone={me.tone} size={40} />
             </Link>

@@ -1,21 +1,25 @@
 {
   "name": "projet-caip",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
-  "description": "CAIP — plateforme d'accompagnement vers l'emploi (interface React + Vite)",
+  "description": "CAIP — plateforme d'accompagnement vers l'emploi (React + Vite, serveur Node, MySQL)",
   "scripts": {
     "dev": "vite",
+    "dev:api": "DB_CLIENT=sqlite SQLITE_FILE=caip-dev.sqlite node --watch server/index.js",
     "build": "vite build",
+    "start": "NODE_ENV=production node server/index.js",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "mysql2": "^3.11.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.28.0"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
+    "react-router-dom": "^6.28.0",
     "vite": "^5.4.11"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

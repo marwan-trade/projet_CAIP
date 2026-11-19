@@ -1,5 +1,7 @@
-import { partenaires } from '../data/mock.js';
+import { partenaires as exemples } from '../data/mock.js';
 import { asset } from '../config.js';
+import { api } from '../services/api.js';
+import { useAsync } from '../hooks/useAsync.js';
 import Icon from './Icon.jsx';
 
 // Logos des centres de formation partenaires.
@@ -8,6 +10,9 @@ import Icon from './Icon.jsx';
 // sinon     : grands emplacements avec le nom (section Partenariats de l'accueil).
 // `onDark`  : sur fond bleu nuit, logos passés en blanc.
 export default function PartnerLogos({ compact = false, onDark = false, label = 'Centres de formation partenaires' }) {
+  // Liste gérée par l'administrateur (Contenus › Partenaires) ; exemples tant qu'elle charge.
+  const { data } = useAsync(api.partenaires);
+  const partenaires = data || exemples;
   const cls = ['partner-logos', compact && 'partner-logos--compact', onDark && 'partner-logos--on-dark'].filter(Boolean).join(' ');
   return (
     <ul className={cls} aria-label={label}>

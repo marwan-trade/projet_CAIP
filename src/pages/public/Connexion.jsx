@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, useSearchParams } from 'react-router-dom';
 import { useLang } from '../../i18n.jsx';
+import { api } from '../../services/api.js';
+import { ESPACE, useSession } from '../../session.jsx';
 import { Logo, Swoosh } from '../../components/Brand.jsx';
 import { Button, Checkbox, Field, Notice, Segmented } from '../../components/ui.jsx';
 import Icon from '../../components/Icon.jsx';
@@ -17,8 +19,10 @@ const MODES = ['connexion', 'inscription', 'oubli'];
 function MotDePasseOublie({ onRetour }) {
   const [erreur, setErreur] = useState('');
   const [envoye, setEnvoye] = useState('');
+  const [lienDemo, setLienDemo] = useState(null);
+  const [envoi, setEnvoi] = useState(false);
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const email = String(new FormData(e.currentTarget).get('email') || '').trim();
     if (!/^\S+@\S+\.\S+$/.test(email)) {
@@ -26,8 +30,16 @@ function MotDePasseOublie({ onRetour }) {
       return;
     }
     setErreur('');
-    // À brancher sur l'API : POST /api/auth/mot-de-passe-oublie
-    setEnvoye(email);
+    setEnvoi(true);
+    try {
+      const r = await api.motDePasseOublie(email);
+      setLienDemo(r.lienDemo);
+      setEnvoye(email);
+    } catch (err) {
+      setErreur(err.champs?.email || err.message);
+    } finally {
+      setEnvoi(false);
+    }
   };
 
   return (
@@ -44,6 +56,11 @@ function MotDePasseOublie({ onRetour }) {
             Si un compte existe pour {envoye}, nous venons d’y envoyer un lien pour choisir un nouveau mot de passe.
             Pensez à regarder dans les courriers indésirables.
           </Notice>
+          {lienDemo && (
+            <Notice tone="info" icon="info" title="Version de démonstration">
+              L’envoi d’e-mails n’est pas encore branché. <Link to={lienDemo}>Choisir un nouveau mot de passe</Link>
+            </Notice>
+          )}
           <Button size="lg" block onClick={onRetour}>Retour à la connexion</Button>
           <button type="button" className="auth__link" onClick={() => setEnvoye('')}>
             Je n’ai rien reçu : renvoyer le lien
@@ -55,7 +72,7 @@ function MotDePasseOublie({ onRetour }) {
             Indiquez l’adresse e-mail de votre compte. Nous vous enverrons un lien pour choisir un nouveau mot de passe.
           </p>
           <Field label="Adresse e-mail" name="email" type="email" placeholder="vous@exemple.com" autoComplete="email" error={erreur} />
-          <Button type="submit" size="lg" block>Recevoir le lien</Button>
+          <Button type="submit" size="lg" block disabled={envoi}>{envoi ? 'Envoi…' : 'Recevoir le lien'}</Button>
         </>
       )}
     </form>
@@ -64,17 +81,19 @@ function MotDePasseOublie({ onRetour }) {
 
 export default function Connexion() {
   const { t, lang, toggle } = useLang();
-  const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const mode = MODES.includes(params.get('mode')) ? params.get('mode') : 'connexion';
   const [erreurs, setErreurs] = useState({});
+  const [envoi, setEnvoi] = useState(false);
+  const { utilisateur, definir } = useSession();
+  const suite = params.get('suite');
 
   const setMode = (m) => {
     setErreurs({});
     setParams(m === 'connexion' ? {} : { mode: m }, { replace: true });
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const motDePasse = String(data.get('password') || '');
@@ -89,8 +108,26 @@ export default function Connexion() {
       if (!data.get('cgu')) err.cgu = 'Merci d’accepter la politique de confidentialité.';
     }
     setErreurs(err);
-    if (Object.keys(err).length === 0) navigate('/app');
+    if (Object.keys(err).length > 0) return;
+    setEnvoi(true);
+    try {
+      const email = String(data.get('email')).trim();
+      const u =
+        mode === 'inscription'
+          ? await api.inscription({ nom: String(data.get('nom')).trim(), email, password: motDePasse, cgu: true, langue: lang })
+          : await api.connexion(email, motDePasse);
+      definir(u); // la redirection vers son espace se fait juste en dessous
+    } catch (e2) {
+      setErreurs({ ...e2.champs, global: Object.keys(e2.champs || {}).length ? '' : e2.message });
+      setEnvoi(false);
+    }
   };
+
+  // Déjà connecté : direction son espace.
+  if (utilisateur) {
+    const espace = ESPACE[utilisateur.role];
+    return <Navigate to={suite && suite.startsWith(espace) ? suite : espace} replace />;
+  }
 
   return (
     <div className="auth">
@@ -166,7 +203,10 @@ export default function Connexion() {
               </div>
             )}
 
-            <Button type="submit" size="lg" block>{mode === 'inscription' ? t('cta.signup') : t('cta.login')}</Button>
+            {erreurs.global && <Notice tone="danger" icon="alert">{erreurs.global}</Notice>}
+            <Button type="submit" size="lg" block disabled={envoi}>
+              {envoi ? 'Un instant…' : mode === 'inscription' ? t('cta.signup') : t('cta.login')}
+            </Button>
 
             <div className="auth__foot">
               <button type="button" className="ghost-btn" onClick={toggle} aria-label={t('lang.switch')}>

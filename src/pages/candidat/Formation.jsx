@@ -1,35 +1,50 @@
 import { useState } from 'react';
 import { api } from '../../services/api.js';
 import { useAsync } from '../../hooks/useAsync.js';
-import { Button, Card, Notice, PageHeader, PageSkeleton, Progress } from '../../components/ui.jsx';
+import { Button, Card, ErreurChargement, Notice, PageHeader, PageSkeleton, Progress } from '../../components/ui.jsx';
 import Icon from '../../components/Icon.jsx';
 
 export default function Formation() {
-  const { data, loading } = useAsync(api.formation);
+  const { data, loading, error, recharger } = useAsync(api.formation);
   const [choix, setChoix] = useState(null);
-  const [valide, setValide] = useState(false);
+  const [resultat, setResultat] = useState(null); // réponse du serveur à la question en cours
+  const [envoi, setEnvoi] = useState(false);
+  const [erreur, setErreur] = useState('');
 
+  if (error && !data) return <ErreurChargement error={error} onRetry={recharger} />;
   if (loading || !data) return <PageSkeleton />;
-  const { modules, quiz } = data;
+  const { modules, quiz, termine } = data;
   const nbValides = modules.filter((m) => m.etat === 'valide').length;
-  const courant = modules.find((m) => m.etat === 'en-cours');
-  const juste = choix === quiz.bonne;
 
   const etatOption = (i) => {
-    if (valide && i === quiz.bonne) return 'is-right';
-    if (valide && i === choix) return 'is-wrong';
+    if (resultat && i === resultat.bonne) return 'is-right';
+    if (resultat && i === choix) return 'is-wrong';
     if (i === choix) return 'is-selected';
     return '';
   };
 
-  const suivant = () => {
-    if (valide) {
-      setChoix(null);
-      setValide(false);
-    } else if (choix !== null) {
-      setValide(true);
+  const valider = async () => {
+    if (choix === null) return;
+    setEnvoi(true);
+    setErreur('');
+    try {
+      setResultat(await api.repondreQuiz(quiz.moduleId, choix));
+    } catch (e) {
+      setErreur(e.message);
+    } finally {
+      setEnvoi(false);
     }
   };
+
+  const suivant = async () => {
+    setEnvoi(true);
+    await recharger();
+    setChoix(null);
+    setResultat(null);
+    setEnvoi(false);
+  };
+
+  const fin = resultat?.fin;
 
   return (
     <>
@@ -48,51 +63,83 @@ export default function Formation() {
                 <span className="stack" style={{ '--gap': '2px' }}>
                   <strong>{m.titre}</strong>
                   <span className="module__state">
-                    {m.etat === 'valide' ? 'Validé' : m.etat === 'en-cours' ? `En cours · question ${m.question} / ${m.total}` : 'À venir'}
+                    {m.etat === 'valide' ? 'Validé' : m.etat === 'en-cours' ? `En cours · question ${Math.min(m.question, m.total)} / ${m.total}` : 'À venir'}
                   </span>
                 </span>
               </li>
             ))}
           </ol>
-          <Notice tone="warn" icon="award">Votre attestation de suivi sera disponible après le module 6.</Notice>
+          {termine ? (
+            <Notice tone="success" icon="award" title="Formation terminée">Bravo, vous avez validé les six modules. Votre attestation de suivi est disponible auprès de votre conseiller.</Notice>
+          ) : (
+            <Notice tone="warn" icon="award">Votre attestation de suivi sera disponible après le module {modules.length}.</Notice>
+          )}
         </Card>
 
         <Card className="quiz rise" style={{ flex: '2 1 440px', '--i': 2 }}>
-          <div className="card__head">
-            <span className="eyebrow">Module {courant.n} · Quiz</span>
-            <span className="muted">Question {courant.question} / {courant.total}</span>
-          </div>
-          <Progress value={(courant.question / courant.total) * 100} label="Avancement du quiz" />
-          <h2 id="question" className="quiz__question">{quiz.question}</h2>
+          {termine || !quiz ? (
+            <div className="empty">
+              <Icon name="award" size={40} className="text-success" />
+              <strong>Tous les modules sont validés.</strong>
+              <span className="muted">Révisez les questions d’entretien pour garder le rythme.</span>
+              <Button to="/app/entretiens" variant="secondary">Préparer l’entretien</Button>
+            </div>
+          ) : (
+            <>
+              <div className="card__head">
+                <span className="eyebrow">Module {quiz.n} · {quiz.titre}</span>
+                <span className="muted">Question {quiz.question} / {quiz.total}</span>
+              </div>
+              <Progress value={((quiz.question - (resultat ? 0 : 1)) / quiz.total) * 100} label="Avancement du quiz" />
+              <h2 id="question" className="quiz__question">{quiz.intitule}</h2>
 
-          <div className="quiz__options" role="radiogroup" aria-labelledby="question">
-            {quiz.options.map((o, i) => (
-              <button
-                key={o}
-                type="button"
-                role="radio"
-                aria-checked={choix === i}
-                disabled={valide}
-                className={`quiz__option ${etatOption(i)}`}
-                onClick={() => setChoix(i)}
-              >
-                <span className="quiz__radio" />
-                {o}
-              </button>
-            ))}
-          </div>
+              <div className="quiz__options" role="radiogroup" aria-labelledby="question">
+                {quiz.options.map((o, i) => (
+                  <button
+                    key={o}
+                    type="button"
+                    role="radio"
+                    aria-checked={choix === i}
+                    disabled={!!resultat || envoi}
+                    className={`quiz__option ${etatOption(i)}`}
+                    onClick={() => setChoix(i)}
+                  >
+                    <span className="quiz__radio" />
+                    {o}
+                  </button>
+                ))}
+              </div>
 
-          <div aria-live="polite">
-            {valide && (
-              <Notice tone={juste ? 'success' : 'warn'} icon={juste ? 'check' : 'info'} title={juste ? 'Bonne réponse' : 'Pas tout à fait'}>
-                {juste ? quiz.explicationBonne : quiz.explicationFausse}
-              </Notice>
-            )}
-          </div>
+              <div aria-live="polite" className="stack" style={{ '--gap': '10px' }}>
+                {resultat && (
+                  <Notice tone={resultat.juste ? 'success' : 'warn'} icon={resultat.juste ? 'check' : 'info'} title={resultat.juste ? 'Bonne réponse' : 'Pas tout à fait'}>
+                    {resultat.explication}
+                  </Notice>
+                )}
+                {fin?.valide && (
+                  <Notice tone="success" icon="award" title={`Module ${quiz.n} validé`}>
+                    {fin.bonnes} bonnes réponses sur {fin.total}. Le module suivant est débloqué.
+                  </Notice>
+                )}
+                {fin && !fin.valide && (
+                  <Notice tone="warn" icon="info" title="Module à reprendre">
+                    {fin.bonnes} bonne{fin.bonnes > 1 ? 's' : ''} réponse{fin.bonnes > 1 ? 's' : ''} sur {fin.total} : il en faut {fin.seuil} pour valider. Le quiz recommence à la première question.
+                  </Notice>
+                )}
+                {erreur && <Notice tone="danger" icon="alert">{erreur}</Notice>}
+              </div>
 
-          <div>
-            <Button size="lg" disabled={choix === null} onClick={suivant}>{valide ? 'Question suivante' : 'Valider'}</Button>
-          </div>
+              <div>
+                {resultat ? (
+                  <Button size="lg" onClick={suivant} disabled={envoi}>
+                    {fin ? (fin.valide ? 'Module suivant' : 'Recommencer le module') : 'Question suivante'}
+                  </Button>
+                ) : (
+                  <Button size="lg" disabled={choix === null || envoi} onClick={valider}>Valider</Button>
+                )}
+              </div>
+            </>
+          )}
         </Card>
       </div>
     </>
